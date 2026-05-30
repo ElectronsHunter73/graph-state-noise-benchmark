@@ -1,9 +1,5 @@
-from src.graph_noise.states import computational_basis_state
-from src.graph_noise.operators import pauli_x, cz
-from src.graph_noise.operations import apply_one_qubit_gate, apply_two_qubit_gate
+from src.graph_noise.graphs import bell_graph_state, four_qubit_cluster_state, star_graph_state
 
-state = computational_basis_state("00")
-print(apply_one_qubit_gate(state, pauli_x(), target=1))
-
-state = computational_basis_state("11")
-print(apply_two_qubit_gate(state, cz(), 0, 1))
+print(bell_graph_state())
+print(four_qubit_cluster_state())
+print(star_graph_state(4))
