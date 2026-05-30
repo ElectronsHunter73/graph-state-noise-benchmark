@@ -1,66 +1,85 @@
 import numpy as np
+from .operators import pauli_x, pauli_y, pauli_z
+from .operations import apply_one_qubit_gate, get_num_qubits
 
-def state_fidelity(state_a, state_b):
-    if len(state_a) != len(state_b):
-        raise ValueError("States must have the same size.")
-
-    norm_a = np.linalg.norm(state_a)
-    norm_b = np.linalg.norm(state_b)
-
-    if norm_a == 0 or norm_b == 0:
-        raise ValueError("State cannot be zero.")
-
-    state_a = state_a / norm_a
-    state_b = state_b / norm_b
-
-    overlap = np.vdot(state_a, state_b)
-
-    return float(abs(overlap) ** 2)
+def check_probability(p):
+    if p < 0 or p > 1:
+        raise ValueError("Probability must be between 0 and 1.")
 
 
-def state_probabilities(state):
-    probabilities = np.abs(state) ** 2
-    total = np.sum(probabilities)
+def bit_flip_noise(state, p):
+    check_probability(p)
+    noisy_state = state.copy()
+    num_qubits = get_num_qubits(state)
+    for qubit in range(num_qubits):
+        if np.random.random() < p:
+            noisy_state = apply_one_qubit_gate(noisy_state, pauli_x(), qubit)
 
-    if total == 0:
-        raise ValueError("State cannot be zero.")
+    return noisy_state
 
-    return probabilities / total
+def dephasing_noise(state, p):
+    check_probability(p)
+    noisy_state = state.copy()
+    num_qubits = get_num_qubits(state)
+
+    for qubit in range(num_qubits):
+        if np.random.random() < p:
+            noisy_state = apply_one_qubit_gate(noisy_state, pauli_z(), qubit)
+
+    return noisy_state
 
 
-def total_variation_distance(prob_a, prob_b):
-    if len(prob_a) != len(prob_b):
-        raise ValueError("Probability lists must have the same size.")
+def depolarizing_noise(state, p):
+    check_probability(p)
+    noisy_state = state.copy()
+    num_qubits = get_num_qubits(state)
+    gates = [pauli_x(), pauli_y(), pauli_z()]
 
+    for qubit in range(num_qubits):
+        if np.random.random() < p:
+            gate_number = np.random.randint(0, 3)
+            noisy_state = apply_one_qubit_gate(noisy_state, gates[gate_number], qubit)
+    return noisy_state
+
+
+def bitstring_distance(a, b):
     distance = 0
+    for i in range(len(a)):
+        if a[i] != b[i]:
+            distance += 1
 
-    for i in range(len(prob_a)):
-        distance += abs(prob_a[i] - prob_b[i])
-
-    return 0.5 * distance
-
-
-def bitstring_probabilities(state):
-    probabilities = state_probabilities(state)
-    num_qubits = int(np.log2(len(state)))
-
-    result = {}
-
-    for i in range(len(probabilities)):
-        bitstring = format(i, f"0{num_qubits}b")
-        result[bitstring] = float(probabilities[i])
-
-    return result
+    return distance
 
 
-def qubit_count(state):
-    num_qubits = int(np.log2(len(state)))
+def measurement_bit_flip_noise(probabilities, p):
+    check_probability(p)
+    size = len(probabilities)
+    num_qubits = int(np.log2(size))
+    if 2 ** num_qubits != size:
+        raise ValueError("Probability vector size must be a power of 2.")
+    
+    noisy_probabilities = np.zeros(size)
+    for old_index in range(size):
+        old_bits = format(old_index, "0" + str(num_qubits) + "b")
 
-    if 2 ** num_qubits != len(state):
-        raise ValueError("State size must be a power of 2.")
+        for new_index in range(size):
+            new_bits = format(new_index, "0" + str(num_qubits) + "b")
+            distance = bitstring_distance(old_bits, new_bits)
 
-    return num_qubits
+            prob = (p ** distance) * ((1 - p) ** (num_qubits - distance))
+            noisy_probabilities[new_index] += probabilities[old_index] * prob
+
+    return noisy_probabilities
 
 
-def edge_count(edges):
-    return len(edges)
+def apply_noise(state, noise_name, p):
+    if noise_name == "bit_flip":
+        return bit_flip_noise(state, p)
+
+    if noise_name == "dephasing":
+        return dephasing_noise(state, p)
+
+    if noise_name == "depolarizing":
+        return depolarizing_noise(state, p)
+
+    raise ValueError("Unknown noise model.")
