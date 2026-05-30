@@ -15,6 +15,7 @@ def tensor_product_state(*states):
     if len(states) == 0:
         raise ValueError("At least one state must be provided.")
     result = states[0]
+    
     for state in states[1:]:
         result = np.kron(result, state)
     return result
@@ -33,10 +34,14 @@ def computational_basis_state(bitstring):
 def n_qubit_plus_state(n):
     if n < 1:
         raise ValueError("Number of qubits must be at least 1.")
+    
     plus = plus_state()
-    return tensor_product_state(*[plus]*n) 
+    return tensor_product_state(*[plus]*n)
+ 
 def normalize(state):
     norm = np.linalg.norm(state)
+
     if norm == 0:
         raise ValueError("Cannot normalize the zero vector.")
+    
     return state / norm

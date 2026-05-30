@@ -27,6 +27,8 @@ def tensor_product(*operators):
     if len(operators) == 0:
         raise ValueError("At least one operator must be provided.")
     result = operators[0]
+    
     for operator in operators[1:]:
         result = np.kron(result, operator)
+    
     return result
