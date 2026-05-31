@@ -1,5 +1,6 @@
 # Graph State Noise Benchmark
 ![tests](https://github.com/ElectronsHunter73/graph-state-noise-benchmark/actions/workflows/tests.yml/badge.svg)
+
 This is a small Python project for testing simple graph-state quantum states with basic noise models.
 
 I made this project to practice graph states, simple quantum noise, and basic benchmark metrics. The simulation is written mostly with NumPy, without using Qiskit for the main part.
