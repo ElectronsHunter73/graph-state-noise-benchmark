@@ -10,6 +10,7 @@ venv/
 results/*
 !results/
 !results/benchmark_results.csv
-!results/*.png
+!results/cluster_4_fidelity.png
+!results/cluster_4_tvd.png
 
 .DS_Store
