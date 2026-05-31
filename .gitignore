@@ -7,7 +7,9 @@ venv/
 .pytest_cache/
 .coverage
 
-results/*.png
-results/*.csv
+results/*
+!results/benchmark_results.csv
+!results/fidelity_plot.png
+!results/tvd_plot.png
 
 .DS_Store
