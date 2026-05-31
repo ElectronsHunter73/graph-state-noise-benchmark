@@ -115,9 +115,6 @@ Below are example fidelity plots for the Bell, 4-qubit cluster, and 4-qubit star
 
 ![Star fidelity plot](results/star_4_fidelity.png)
 
-Run the tests:
-
-python -m pytest -v
 
 ## Example output
 
