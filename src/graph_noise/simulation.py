@@ -7,36 +7,43 @@ from .graphs import (
     get_star_edges,
     get_line_edges,
 )
+
 from .metrics import (
     state_fidelity,
     state_probabilities,
     total_variation_distance,
 )
+
 from .noise import apply_noise, measurement_bit_flip_noise
 
 
 def get_benchmarks():
-    return [
-        {
-            "name": "bell",
-            "state": bell_graph_state(),
-            "edges": [(0, 1)],
-        },
-        {
-            "name": "star_4",
-            "state": star_graph_state(4),
-            "edges": get_star_edges(4),
-        },
-        {
-            "name": "cluster_4",
-            "state": four_qubit_cluster_state(),
-            "edges": get_line_edges(4),
-        },
-    ]
+    benchmarks = []
+
+    benchmarks.append({
+        "name": "bell",
+        "state": bell_graph_state(),
+        "edges": [(0, 1)],
+    })
+
+    benchmarks.append({
+        "name": "star_4",
+        "state": star_graph_state(4),
+        "edges": get_star_edges(4),
+    })
+
+    benchmarks.append({
+        "name": "cluster_4",
+        "state": four_qubit_cluster_state(),
+        "edges": get_line_edges(4),
+    })
+
+    return benchmarks
 
 
 def run_state_noise_once(state, noise_name, p):
     ideal_probabilities = state_probabilities(state)
+
     noisy_state = apply_noise(state, noise_name, p)
     noisy_probabilities = state_probabilities(noisy_state)
 
@@ -58,25 +65,25 @@ def run_measurement_noise_once(state, p):
 
 def run_one_setting(benchmark, noise_name, p, repeats):
     fidelities = []
-    distances = []
+    tvds = []
 
     state = benchmark["state"]
 
-    for _ in range(repeats):
+    for i in range(repeats):
         if noise_name == "measurement_bit_flip":
-            fidelity, distance = run_measurement_noise_once(state, p)
+            fidelity, tvd = run_measurement_noise_once(state, p)
         else:
-            fidelity, distance = run_state_noise_once(state, noise_name, p)
+            fidelity, tvd = run_state_noise_once(state, noise_name, p)
 
         fidelities.append(fidelity)
-        distances.append(distance)
+        tvds.append(tvd)
 
     result = {
         "benchmark": benchmark["name"],
         "noise": noise_name,
         "p": p,
         "fidelity": float(np.mean(fidelities)),
-        "tvd": float(np.mean(distances)),
+        "tvd": float(np.mean(tvds)),
         "qubits": int(np.log2(len(state))),
         "edges": len(benchmark["edges"]),
         "depth": len(benchmark["edges"]),
@@ -89,7 +96,6 @@ def run_benchmarks(noise_values=None, repeats=100):
     if noise_values is None:
         noise_values = [0.0, 0.02, 0.05, 0.1, 0.2]
 
-    benchmarks = get_benchmarks()
     noise_models = [
         "bit_flip",
         "dephasing",
@@ -97,6 +103,7 @@ def run_benchmarks(noise_values=None, repeats=100):
         "measurement_bit_flip",
     ]
 
+    benchmarks = get_benchmarks()
     results = []
 
     for benchmark in benchmarks:
