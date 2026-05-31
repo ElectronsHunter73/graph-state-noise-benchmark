@@ -7,10 +7,7 @@ venv/
 .pytest_cache/
 .coverage
 
-results/*
-!results/
-!results/benchmark_results.csv
-!results/cluster_4_fidelity.png
-!results/cluster_4_tvd.png
+results/*.png
+results/*.csv
 
 .DS_Store
