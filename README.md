@@ -99,6 +99,21 @@ results/benchmark_results.csv
 Then make the plots:
 
 python examples/plot_results.py
+## Example fidelity plots
+
+Below are example fidelity plots for the Bell, 4-qubit cluster, and 4-qubit star graph states.
+
+### Bell state
+
+![Bell fidelity plot](results/bell_fidelity.png)
+
+### 4-qubit cluster state
+
+![Cluster fidelity plot](results/cluster_4_fidelity.png)
+
+### 4-qubit star state
+
+![Star fidelity plot](results/star_4_fidelity.png)
 
 Run the tests:
 
