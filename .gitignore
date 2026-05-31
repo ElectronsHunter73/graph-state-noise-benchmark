@@ -8,8 +8,8 @@ venv/
 .coverage
 
 results/*
+!results/
 !results/benchmark_results.csv
-!results/fidelity_plot.png
-!results/tvd_plot.png
+!results/*.png
 
 .DS_Store
