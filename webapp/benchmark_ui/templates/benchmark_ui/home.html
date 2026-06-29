@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph-State Noise Benchmark</title>
+</head>
+<body>
+    <h1>Graph-State Noise Benchmark</h1>
+
+    <p>
+        This small Django page runs the graph-state noise benchmark using the existing Python simulation code.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Run benchmark</button>
+    </form>
+
+    {% if error_message %}
+        <h2>Error</h2>
+        <p>{{ error_message }}</p>
+    {% endif %}
+
+    {% if result %}
+        <h2>Results</h2>
+
+        <p><strong>Benchmark:</strong> {{ result.benchmark }}</p>
+        <p><strong>Noise model:</strong> {{ result.noise }}</p>
+        <p><strong>Noise probability:</strong> {{ result.p }}</p>
+        <p><strong>Repeated runs:</strong> {{ form.repeats.value }}</p>
+        <p><strong>Fidelity:</strong> {{ result.fidelity }}</p>
+        <p><strong>Total variation distance:</strong> {{ result.tvd }}</p>
+        <p><strong>Qubits:</strong> {{ result.qubits }}</p>
+        <p><strong>Edges:</strong> {{ result.edges }}</p>
+        <p><strong>Depth estimate:</strong> {{ result.depth }}</p>
+    {% endif %}
+</body>
+</html>
