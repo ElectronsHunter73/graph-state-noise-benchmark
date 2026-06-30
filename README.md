@@ -84,7 +84,7 @@ Activate it on Windows PowerShell:
 
 Install the needed packages:
 
-pip install numpy matplotlib pytest
+pip install -r requirements.txt
 
 ## How to run
 
@@ -99,6 +99,22 @@ results/benchmark_results.csv
 Then make the plots:
 
 python examples/plot_results.py
+## Django web interface
+
+I also added a small Django interface for running one benchmark from a webpage.
+
+From the project root, install the requirements:
+
+```bash
+pip install -r requirements.txt
+Then run the web app:
+cd webapp
+python manage.py runserver
+Open
+http://127.0.0.1:8000/
+The page lets the user choose a graph state, a noise model, a noise probability, and the number of repeated runs. It then displays the benchmark name, fidelity, total variation distance, number of qubits, number of edges, and a simple depth estimate.
+
+The Django interface calls the existing simulation code through src/graph_noise/web_runner.py, so the web layer stays separate from the core benchmark logic
 ## Example fidelity plots
 
 Below are example fidelity plots for the Bell, 4-qubit cluster, and 4-qubit star graph states.
