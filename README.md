@@ -107,10 +107,14 @@ From the project root, install the requirements:
 
 ```bash
 pip install -r requirements.txt
+```
 Then run the web app:
+```bash
 cd webapp
 python manage.py runserver
+```
 Open
+```bash
 http://127.0.0.1:8000/
 ```
 The page lets the user choose a graph state, a noise model, a noise probability, and the number of repeated runs. It then displays the benchmark name, fidelity, total variation distance, number of qubits, number of edges, and a simple depth estimate.'
