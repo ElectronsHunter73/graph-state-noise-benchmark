@@ -120,6 +120,10 @@ http://127.0.0.1:8000/
 The page lets the user choose a graph state, a noise model, a noise probability, and the number of repeated runs. It then displays the benchmark name, fidelity, total variation distance, number of qubits, number of edges, and a simple depth estimate.'
 
 The Django interface calls the existing simulation code through src/graph_noise/web_runner.py, so the web layer stays separate from the core benchmark logic
+### Interface preview
+Below is a screenshot of the Django page after running one benchmark from the browser.
+<img width="506" height="407" alt="image" src="https://github.com/user-attachments/assets/ec1e791f-3421-49a0-8f0f-21def4be3b09" />
+
 ## Example fidelity plots
 
 Below are example fidelity plots for the Bell, 4-qubit cluster, and 4-qubit star graph states.
